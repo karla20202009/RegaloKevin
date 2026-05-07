@@ -1,2 +1,3 @@
+providers = ["php"]
 [variables]
-    PHP_EXTENSIONS = "mysqli"
+PHP_EXTENSIONS = "mysqli"
