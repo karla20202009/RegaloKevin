@@ -1,5 +1,11 @@
 <?php 
 //include("conexion.php"); 
+include("conexion.php");
+$nombre = $_POST['nombre'];
+$msg = $_POST['mensaje'];
+
+$sql = "INSERT INTO mensajes (nombre, mensaje) VALUES ('$nombre', '$msg')";
+mysqli_query($conexion, $sql);
 
 // Guardar mensaje nuevo
 if (isset($_POST['enviar'])) {
