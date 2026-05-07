@@ -1,18 +1,19 @@
 <?php 
-//include("conexion.php"); 
 include("conexion.php");
-$nombre = $_POST['nombre'];
-$msg = $_POST['mensaje'];
 
-$sql = "INSERT INTO mensajes (nombre, mensaje) VALUES ('$nombre', '$msg')";
-mysqli_query($conexion, $sql);
-
-// Guardar mensaje nuevo
+// 1. Guardar mensaje nuevo solo si se presionó el botón
 if (isset($_POST['enviar'])) {
-    $texto = mysqli_real_escape_string($conexion, $_POST['mensaje']);
-    if (!empty($texto)) {
-        mysqli_query($conexion, "INSERT INTO mensajes (texto) VALUES ('$texto')");
-        header("Location: interactivo.php"); 
+    $nombre = "Invitado"; // O puedes agregar un input de nombre en el form
+    $msg = mysqli_real_escape_string($conexion, $_POST['mensaje']);
+
+    if (!empty($msg)) {
+        // Usamos los nombres de columna que creamos en Railway: 'nombre' y 'mensaje'
+        $sql = "INSERT INTO mensajes (nombre, mensaje) VALUES ('$nombre', '$msg')";
+        mysqli_query($conexion, $sql);
+        
+        // Esto recarga la página para que no se reenvíe el mensaje al dar F5
+        header("Location: interactivo.php");
+        exit();
     }
 }
 ?>
@@ -20,20 +21,22 @@ if (isset($_POST['enviar'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook ★ Kevin</title>
     <style>
         body {
             background: #ffafcc;
             background-image: url('https://curiotopia.neocities.org/backgrounds/pattern/stars.gif');
             font-family: 'MS Sans Serif', Tahoma, sans-serif;
-            padding: 20px;
+            padding: 10px; /* Reducido para celular */
         }
         .win-window {
             background: #c0c0c0;
             border: 2px solid #fff;
             border-right: 2px solid #808080;
             border-bottom: 2px solid #808080;
-            width: 450px;
+            width: 95%; /* Adaptable a la pantalla */
+            max-width: 450px;
             margin: 20px auto;
             box-shadow: 5px 5px 0px rgba(0,0,0,0.5);
         }
@@ -49,7 +52,6 @@ if (isset($_POST['enviar'])) {
         textarea { width: 90%; height: 60px; border: 2px inset #808080; }
         .btn-win { background: #c0c0c0; border: 2px outset #fff; padding: 5px 15px; cursor: pointer; font-weight: bold; }
         
-        /* Lista de mensajes estilo retro */
         .messages-list {
             background: #fff;
             border: 2px inset #808080;
@@ -60,16 +62,21 @@ if (isset($_POST['enviar'])) {
             padding: 10px;
             font-size: 12px;
         }
-        .msg-item { border-bottom: 1px dotted #808080; padding: 5px 0; color: #ff1493; }
+        .msg-item { border-bottom: 1px dotted #808080; padding: 5px 0; color: #ff1493; word-wrap: break-word; }
+
+        /* Estilo para el reproductor en móviles */
+        @media (max-width: 600px) {
+            .winamp-player { position: static !important; width: 100% !important; margin-bottom: 10px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="win-window" style="width: 320px; position: fixed; top: 10px; left: 10px; z-index: 100;">
+<div class="win-window winamp-player" style="width: 300px; position: fixed; top: 10px; left: 10px; z-index: 100;">
     <div class="title-bar"><span>Winamp - Afro Jazz</span><span>X</span></div>
-    <div class="content-area" style="background: #000;">
+    <div class="content-area" style="background: #000; padding: 5px;">
         <audio controls loop style="width: 100%;">
-            <source src="фрози (frozy) & 33nimb - Afro Jazz [Ultra Records].mp3" type="audio/mpeg">
+            <source src="musica.mp3" type="audio/mpeg">
         </audio>
     </div>
 </div>
@@ -86,8 +93,11 @@ if (isset($_POST['enviar'])) {
             <marquee scrollamount="3" style="background: #000; color: #0f0; font-family: monospace;">★ RECENT MESSAGES ★</marquee>
             <?php
             $resultado = mysqli_query($conexion, "SELECT * FROM mensajes ORDER BY id DESC");
-            while($row = mysqli_fetch_assoc($resultado)) {
-                echo "<div class='msg-item'><strong>> </strong>" . htmlspecialchars($row['texto']) . " <span style='font-size:10px; color:#808080;'>(".date('H:i', strtotime($row['fecha'])).")</span></div>";
+            if ($resultado) {
+                while($row = mysqli_fetch_assoc($resultado)) {
+                    // Usamos 'mensaje' que es el nombre real de la columna
+                    echo "<div class='msg-item'><strong>> </strong>" . htmlspecialchars($row['mensaje']) . " <span style='font-size:10px; color:#808080;'>(".date('H:i', strtotime($row['fecha'])).")</span></div>";
+                }
             }
             ?>
         </div>
@@ -97,4 +107,5 @@ if (isset($_POST['enviar'])) {
 <center><a href="index.php" class="btn-win" style="text-decoration:none;">Back to Home</a></center>
 
 </body>
+</html>
 </html>
