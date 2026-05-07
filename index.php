@@ -84,8 +84,30 @@
             padding: 10px;
             display: none;
         }
+        /* Esto hace que si la pantalla es de celular, el diseño cambie */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Menos espacio a los lados */
+    }
+    
+    .contenedor-principal { 
+        width: 100% !important; /* Que use todo el ancho del cel */
+        margin: 0 auto;
+    }
+
+    img {
+        max-width: 100%; /* Que las fotos no se salgan de la pantalla */
+        height: auto;
+    }
+    
+    /* Si tienes tablas tipo MySpace, esto ayuda a que no se vean raras */
+    table {
+        width: 100% !important;
+    }
+}
     </style>
 </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <body>
 
 <audio id="bgMusic" loop>
