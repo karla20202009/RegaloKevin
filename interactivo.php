@@ -1,5 +1,5 @@
 <?php 
-include("conexion.php"); 
+//include("conexion.php"); 
 
 // Guardar mensaje nuevo
 if (isset($_POST['enviar'])) {
