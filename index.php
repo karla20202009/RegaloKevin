@@ -89,7 +89,7 @@
 <body>
 
 <audio id="bgMusic" loop>
-    <source src="фрози (frozy) & 33nimb - Afro Jazz [Ultra Records].mp3" type="audio/mpeg">
+    <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
 <div class="main-wrapper">
